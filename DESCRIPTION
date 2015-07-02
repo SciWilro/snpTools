@@ -1,0 +1,7 @@
+Package: snpTools
+Title: Miscellaneous tools for working with SNP genotyping data
+Version: 1.0
+Authors@R: person("Scott", "Funkhouser", , "sfunkhouser@gmail.com", role = c("aut", "cre"))
+Description: Includes various tools used to format genotyping data.
+License: MIT + file LICENSE
+LazyData: true
