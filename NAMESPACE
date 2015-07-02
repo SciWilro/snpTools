@@ -2,4 +2,3 @@
 
 export(filter_geno)
 export(format_gpGeno)
-export(haplo_comp)
