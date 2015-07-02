@@ -2,3 +2,4 @@
 
 export(filter_geno)
 export(format_gpGeno)
+export(string_to_vec)
