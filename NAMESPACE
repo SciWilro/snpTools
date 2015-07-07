@@ -2,4 +2,5 @@
 
 export(filter_geno)
 export(format_gpGeno)
+export(merge_geno)
 export(string_to_vec)
