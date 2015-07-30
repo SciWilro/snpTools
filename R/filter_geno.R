@@ -25,3 +25,6 @@ filter_geno <- function(geno, call_rate = 0.9, fix = TRUE) {
   geno_filtered <- geno_filtered[, idx]
   return(geno_filtered)
 }
+
+
+#TEST
