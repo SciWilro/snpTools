@@ -1,4 +1,3 @@
-
 #' Synbreed geno formatting converter
 #'
 #' Function to convert genotype file from long format to matrix format suitable for Synbreeds
@@ -12,11 +11,15 @@
 #' @param id_col Numeric. Indicates which column in file contains individual names
 #' @param allele1_col Numeric. Indicates which column contains genotyping for allele 1.
 #' @param allele2_col Numeric. Indicates which column contains genotyping for allele 2.
+#' @param format character describing desired output. Options include "doseB", indicating that the
+#'  output will be in the dosage of allele B format. If doseB is not chosen, output is left in
+#'  original format.
 #'
 #' @return Genotype matrix with individuals in rows and snps in columns
 #' @export
 format_gpGeno <- function(data_file, num_ids, num_snps,
-                          head = 10, snp_col = 1, id_col = 2, allele1_col = 3, allele2_col = 4) {
+                          head = 10, snp_col = 1, id_col = 2, allele1_col = 3, allele2_col = 4,
+                          format = "doseB") {
   # Read in long file
   raw_data <- read.table(data_file, skip = head, header = FALSE, sep = '\t')
 
@@ -34,5 +37,8 @@ format_gpGeno <- function(data_file, num_ids, num_snps,
   colnames(gMat) <- snps
   rownames(gMat) <- ids
 
+  # Check for desired formatting
+  if (format == "doseB")
+    gmat <- count_geno(gmat)
   return(gMat)
 }

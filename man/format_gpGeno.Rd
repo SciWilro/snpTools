@@ -5,7 +5,7 @@
 \title{Synbreed geno formatting converter}
 \usage{
 format_gpGeno(data_file, num_ids, num_snps, head = 10, snp_col = 1,
-  id_col = 2, allele1_col = 3, allele2_col = 4)
+  id_col = 2, allele1_col = 3, allele2_col = 4, format = "doseB")
 }
 \arguments{
 \item{data_file}{Path to raw genotyping file in long format}
@@ -23,6 +23,10 @@ format_gpGeno(data_file, num_ids, num_snps, head = 10, snp_col = 1,
 \item{allele1_col}{Numeric. Indicates which column contains genotyping for allele 1.}
 
 \item{allele2_col}{Numeric. Indicates which column contains genotyping for allele 2.}
+
+\item{format}{character describing desired output. Options include "doseB", indicating that the
+ output will be in the dosage of allele B format. If doseB is not chosen, output is left in
+ original format.}
 }
 \value{
 Genotype matrix with individuals in rows and snps in columns
