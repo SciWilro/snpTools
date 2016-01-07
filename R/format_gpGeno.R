@@ -34,11 +34,12 @@ format_gpGeno <- function(data_file, num_ids, num_snps,
 
   # Create matrix with IDs in rows and SNPs in columns. Assign col/row names
   gMat <- matrix(data = genotypes, nrow = num_ids, ncol = num_snps, byrow = TRUE)
-  colnames(gMat) <- snps
-  rownames(gMat) <- ids
-
+  
   # Check for desired formatting
   if (format == "doseB")
     gMat <- count_geno(gMat)
+  
+  colnames(gMat) <- snps
+  rownames(gMat) <- ids
   return(gMat)
 }
