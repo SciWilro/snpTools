@@ -39,6 +39,6 @@ format_gpGeno <- function(data_file, num_ids, num_snps,
 
   # Check for desired formatting
   if (format == "doseB")
-    gmat <- count_geno(gmat)
+    gMat <- count_geno(gMat)
   return(gMat)
 }
