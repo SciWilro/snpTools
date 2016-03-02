@@ -21,7 +21,8 @@ fimpute_run <- function(geno,
     if(!any(colnames(map) == c("chr", "pos")))
       stop("Check map argument. It should have the columns 'chr' and 'map'")
   
-    # Ensure chromosomes are numeric (change sex chromosomes if necessary)
+    # Ensure chromosomes are numeric character values (change sex chromosomes if necessary)
+    map$chr <- as.character(map$chr)
     map$chr[map$chr == 0] <- NA
     map$chr[map$chr == "X"] <- 19
     map$chr[map$chr == "Y"] <- 20
