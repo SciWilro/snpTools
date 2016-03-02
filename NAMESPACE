@@ -3,6 +3,7 @@
 export(count_geno)
 export(create_snp_info)
 export(filter_geno)
+export(fimpute_run)
 export(format_gpGeno)
 export(merge_geno)
 export(string_to_vec)
