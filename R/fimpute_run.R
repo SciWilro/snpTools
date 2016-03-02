@@ -21,15 +21,20 @@ fimpute_run <- function(geno,
     if(!any(colnames(map) == c("chr", "pos")))
       stop("Check map argument. It should have the columns 'chr' and 'map'")
   
-    # NAs not permitted in chr slot of map. Choose integer (presumably not present in organism studied)
-    # to replace NAs
+    # Ensure chromosomes are numeric (change sex chromosomes if necessary)
+    map$chr[map$chr == 0] <- NA
+    map$chr[map$chr == "X"] <- 19
+    map$chr[map$chr == "Y"] <- 20
     map$chr[is.na(map$chr)] <- 21
+    
+    # IDs of individuals cannot contain spaces, replace with underscores
+    rownames(geno) <- gsub(" ", "_", rownames(geno))
     
     # Check if SNPs present in geno are present in the map
     idx <- colnames(geno) %in% rownames(map)
     
-    if (any(idx))
-      warning(paste(sum(idx), "SNPs present in geno were not present in map, and were removed"))
+    if (any(!idx))
+      warning(paste(sum(!idx), "SNPs present in geno were not present in map, and were removed"))
     
     # Only keep SNPs in geno if they are present in map
     geno <- geno[, idx]
