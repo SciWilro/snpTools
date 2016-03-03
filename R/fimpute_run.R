@@ -11,22 +11,31 @@
 #' column of the pedigree is for ID, second is for sire/father ID, and third is for dam/mother ID.
 #' @param path a character represting the path to the FImpute binary. If omitted, assumes FImpute binary
 #' resides along PATH.
+#' @param groups a list of character vectors with the names of IDs meant to be processed as groups. 
+#' Names of list should be the names of the groups, with each element containing IDs.
+#' @param exclude_chr a character vector of chromosomes to exclude
+#' @param output_folder a character providing the location of desired FImpute output
 #' @export
 fimpute_run <- function(geno,
                         map,
                         ped = NULL,
-                        path = NULL) {
+                        path = NULL,
+                        groups = NULL,
+                        exclude_chr = 0,
+                        output_folder = getwd()) {
 
     # Check if required objects meet criteria
     if(!any(colnames(map) == c("chr", "pos")))
       stop("Check map argument. It should have the columns 'chr' and 'map'")
   
-    # Ensure chromosomes are numeric character values (change sex chromosomes if necessary)
+    # Ensure chromosomes are numeric character values (change sex chromosomes if necessary) and replace
+    # 0 positions with NA
     map$chr <- as.character(map$chr)
     map$chr[map$chr == 0] <- NA
     map$chr[map$chr == "X"] <- 19
     map$chr[map$chr == "Y"] <- 20
     map$chr[is.na(map$chr)] <- 21
+    map$pos[map$pos == 0] <- NA
     
     # IDs of individuals cannot contain spaces, replace with underscores
     rownames(geno) <- gsub(" ", "_", rownames(geno))
@@ -64,11 +73,68 @@ fimpute_run <- function(geno,
                            chip_number,
                            call)
     colnames(genotype) <- c("ID", "Chip", "Call")
+
+    # Write FImpute input components ---------------------------------------------------------------
+    # 1. SNP info
+    snp_info <- data.frame(rownames(map),
+                           map,
+                           chip)
+    colnames(snp_info) <- c("SNP_ID", "Chr", "Pos", "Chip1")
     
-    snp_info_list <- list(map, 
-                          chip,
-                          genotype)
+    write.table(snp_info,
+                file = "snp_info_fimpute.txt", 
+                quote = FALSE, 
+                sep = '\t', 
+                col.names = TRUE, 
+                row.names = FALSE)
     
-    names(snp_info_list) <- c("map", "chip", "geno")
-    return(snp_info_list)
+    # 2. Geno info and submission file
+    if (!is.null(groups))
+      for (i in 1:length(groups)) {
+        group_i <- genotypes[ genotypes[, 1] %in% group_geno[[i]] ]
+        write.table(group_i,
+                    file = paste0(names(groups)[i], "_geno_fimpute.txt"),
+                    quote = FALSE,
+                    sep = '\t',
+                    col.names = TRUE,
+                    row.names = FALSE)
+        
+        # One submission file for each group
+        file_con <- file(paste0(names(groups)[i], "_fimpute_run.txt"))
+        writeLines(
+          c(paste0('title="', names(groups)[i], '";'), 
+            paste0('genotype_file="', paste0(names(groups)[i], '_geno_fimpute.txt"', ';')),
+            'snp_info_file="snp_info_fimpute.txt";',
+            # 'ped_file="";',
+            paste0('output_folder="', output_folder, '";'),
+            paste0('exclude_chr= ', exclude_chr, ';'),
+            'save_hap_lib;',
+            'ref = 1000 /parent;',
+            'njob=5;')
+        )
+        close(file_con)
+      }
+    else {
+      write.table(genotypes,
+                  file = "geno_fimpute.txt",
+                  quote = FALSE,
+                  sep = '\t',
+                  col.names = TRUE,
+                  row.names = FALSE)
+      
+      # Write a single submission file
+      file_con <- file("fimpute_run.txt")
+      writeLines(
+        c('title="fimpute";',
+          'genotype_file="geno_fimpute.txt";',
+          'snp_info_file="snp_info_fimpute.txt";',
+          # 'ped_file="";',
+          paste0('output_folder="', output_folder, '";'),
+          paste0('exclude_chr= ', exclude_chr, ';'),
+          'save_hap_lib;',
+          'ref = 1000 /parent;',
+          'njob=5;')
+      )
+      close(file_con)
+    }
 }

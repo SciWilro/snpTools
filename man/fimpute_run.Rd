@@ -4,7 +4,8 @@
 \alias{fimpute_run}
 \title{Run Fimpute}
 \usage{
-fimpute_run(geno, map, ped = NULL, path = NULL)
+fimpute_run(geno, map, ped = NULL, path = NULL, groups = NULL,
+  exclude_chr = 0, output_folder = getwd())
 }
 \arguments{
 \item{geno}{a matrix or data.frame with SNPs in columns and individuals in rows. Genotypes must
@@ -17,6 +18,13 @@ column of the pedigree is for ID, second is for sire/father ID, and third is for
 
 \item{path}{a character represting the path to the FImpute binary. If omitted, assumes FImpute binary
 resides along PATH.}
+
+\item{groups}{a list of character vectors with the names of IDs meant to be processed as groups.
+Names of list should be the names of the groups, with each element containing IDs.}
+
+\item{exclude_chr}{a character vector of chromosomes to exclude}
+
+\item{output_folder}{a character providing the location of desired FImpute output}
 }
 \description{
 Invoke Fimpute for imputation and genotype phasing from within R. Uses R objects for genotypes,
