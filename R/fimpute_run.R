@@ -69,10 +69,10 @@ fimpute_run <- function(geno,
     call <- apply(geno, 1, paste, collapse = "")
     
     # Assemble required output (ID, chip, and genotypes (represented as one long string))
-    genotype <- data.frame(id,
-                           chip_number,
-                           call)
-    colnames(genotype) <- c("ID", "Chip", "Call")
+    genotypes <- data.frame(id,
+                            chip_number,
+                            call)
+    colnames(genotypes) <- c("ID", "Chip", "Call")
 
     # Write FImpute input components ---------------------------------------------------------------
     # 1. SNP info
