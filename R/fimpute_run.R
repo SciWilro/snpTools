@@ -110,7 +110,8 @@ fimpute_run <- function(geno,
             paste0('exclude_chr= ', exclude_chr, ';'),
             'save_hap_lib;',
             'ref = 1000 /parent;',
-            'njob=5;')
+            'njob=5;'),
+          con = file_con
         )
         close(file_con)
       }
@@ -133,7 +134,8 @@ fimpute_run <- function(geno,
           paste0('exclude_chr= ', exclude_chr, ';'),
           'save_hap_lib;',
           'ref = 1000 /parent;',
-          'njob=5;')
+          'njob=5;'),
+        con = file_con
       )
       close(file_con)
     }
