@@ -103,10 +103,10 @@ fimpute_run <- function(geno,
         file_con <- file(paste0(names(groups)[i], "_fimpute_run.txt"))
         writeLines(
           c(paste0('title="', names(groups)[i], '";'), 
-            paste0('genotype_file="', paste0(names(groups)[i], '_geno_fimpute.txt"', ';')),
+            paste0('genotype_file="', names(groups)[i], '_geno_fimpute.txt";'),
             'snp_info_file="snp_info_fimpute.txt";',
             # 'ped_file="";',
-            paste0('output_folder="', output_folder, '";'),
+            paste0('output_folder="', output_folder, names(groups)[i], '_fimpute_run";'),
             paste0('exclude_chr= ', exclude_chr, ';'),
             'save_hap_lib;',
             'ref = 1000 /parent;',
@@ -117,9 +117,9 @@ fimpute_run <- function(geno,
         
         # Invoke FImpute for each group
         if (!is.null(path))
-          system(paste0(path, "FImpute", paste0(names(groups)[i], "_fimpute_run.txt")))
+          system(paste0(path, "/FImpute", names(groups)[i], "_fimpute_run.txt"))
         else
-          system(paste0("FImpute", paste0(names(groups)[i], "_fimpute_run.txt")))
+          system(paste0("FImpute", names(groups)[i], "_fimpute_run.txt"))
       }
     } else {
       write.table(genotypes,
@@ -136,7 +136,7 @@ fimpute_run <- function(geno,
           'genotype_file="geno_fimpute.txt";',
           'snp_info_file="snp_info_fimpute.txt";',
           # 'ped_file="";',
-          paste0('output_folder="', output_folder, '";'),
+          paste0('output_folder="', output_folder, '/fimpute_run";'),
           paste0('exclude_chr= ', exclude_chr, ';'),
           'save_hap_lib;',
           'ref = 1000 /parent;',
@@ -147,7 +147,7 @@ fimpute_run <- function(geno,
       
       # Invoke FImpute
       if (!is.null(path))
-        system(paste0(path, "FImpute fimpute_run.txt"))
+        system(paste0(path, "/FImpute fimpute_run.txt"))
       else
         system("FImpute fimpute_run.txt")
     }
