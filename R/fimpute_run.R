@@ -74,7 +74,7 @@ fimpute_run <- function(geno,
                             call)
     colnames(genotypes) <- c("ID", "Chip", "Call")
 
-    # Write FImpute input components ---------------------------------------------------------------
+    # Write FImpute input components and run -------------------------------------------------------
     # 1. SNP info
     snp_info <- data.frame(rownames(map),
                            map,
@@ -89,7 +89,7 @@ fimpute_run <- function(geno,
                 row.names = FALSE)
     
     # 2. Geno info and submission file
-    if (!is.null(groups))
+    if (!is.null(groups)) {
       for (i in 1:length(groups)) {
         group_i <- genotypes[ genotypes[, 1] %in% group_geno[[i]] ]
         write.table(group_i,
@@ -114,8 +114,14 @@ fimpute_run <- function(geno,
           con = file_con
         )
         close(file_con)
+        
+        # Invoke FImpute for each group
+        if (!is.null(path))
+          system(paste0(path, " FImpute", paste0(names(groups)[i], "_fimpute_run.txt")))
+        else
+          system(paste0("FImpute", paste0(names(groups)[i], "_fimpute_run.txt")))
       }
-    else {
+    } else {
       write.table(genotypes,
                   file = "geno_fimpute.txt",
                   quote = FALSE,
@@ -138,5 +144,15 @@ fimpute_run <- function(geno,
         con = file_con
       )
       close(file_con)
+      
+      # Invoke FImpute
+      if (!is.null(path))
+        system(paste0(path, " FImpute fimpute_run.txt"))
+      else
+        system("FImpute fimpute_run.txt")
     }
 }
+
+
+
+
