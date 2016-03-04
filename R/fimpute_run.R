@@ -24,6 +24,8 @@ fimpute_run <- function(geno,
                         exclude_chr = 0,
                         output_folder = getwd()) {
 
+    print("Preparing input files for FImpute")
+  
     # Check if required objects meet criteria
     if(!any(colnames(map) == c("chr", "pos")))
       stop("Check map argument. It should have the columns 'chr' and 'map'")
@@ -91,7 +93,7 @@ fimpute_run <- function(geno,
     # 2. Geno info and submission file
     if (!is.null(groups)) {
       for (i in 1:length(groups)) {
-        group_i <- genotypes[ genotypes[, 1] %in% group_geno[[i]] ]
+        group_i <- genotypes[ genotypes[, 1] %in% groups[[i]] ]
         write.table(group_i,
                     file = paste0(names(groups)[i], "_geno_fimpute.txt"),
                     quote = FALSE,
