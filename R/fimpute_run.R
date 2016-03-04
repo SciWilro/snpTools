@@ -117,7 +117,7 @@ fimpute_run <- function(geno,
         
         # Invoke FImpute for each group
         if (!is.null(path))
-          system(paste0(path, " FImpute", paste0(names(groups)[i], "_fimpute_run.txt")))
+          system(paste0(path, "FImpute", paste0(names(groups)[i], "_fimpute_run.txt")))
         else
           system(paste0("FImpute", paste0(names(groups)[i], "_fimpute_run.txt")))
       }
@@ -147,7 +147,7 @@ fimpute_run <- function(geno,
       
       # Invoke FImpute
       if (!is.null(path))
-        system(paste0(path, " FImpute fimpute_run.txt"))
+        system(paste0(path, "FImpute fimpute_run.txt"))
       else
         system("FImpute fimpute_run.txt")
     }
