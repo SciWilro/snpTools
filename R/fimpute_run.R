@@ -116,7 +116,7 @@ fimpute_run <- function(geno,
             paste0('output_folder="', output_folder, '/', names(groups)[i], '_fimpute_run";'),
             paste0('exclude_chr= ', exclude_chr, ';'),
             'save_hap_lib;',
-            'ref = 1000 /parent;',
+            # 'ref = 1000 /parent;',
             'njob=5;'),
           con = file_con
         )
@@ -147,7 +147,7 @@ fimpute_run <- function(geno,
           paste0('output_folder="', output_folder, '/fimpute_run";'),
           paste0('exclude_chr= ', exclude_chr, ';'),
           'save_hap_lib;',
-          'ref = 1000 /parent;',
+          # 'ref = 1000 /parent;',
           'njob=5;'),
         con = file_con
       )
