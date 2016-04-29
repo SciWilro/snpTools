@@ -5,6 +5,8 @@ Authors@R: person("Scott", "Funkhouser", , "sfunkhouser@gmail.com", role = c("au
 Description: Includes various tools used to format genotyping data.
 License: MIT + file LICENSE
 LazyData: true
-Suggests: testthat
+Suggests:
+    testthat
 Imports:
-  magrittr (>= 1.5)
+    magrittr (>= 1.5)
+RoxygenNote: 5.0.1
