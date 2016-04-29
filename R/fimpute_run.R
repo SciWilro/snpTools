@@ -8,7 +8,9 @@
 #' be coded as dosage of allele 'b' {0, 1, 2}.
 #' @param map a data.frame containing SNP map information for each SNP present in geno
 #' @param ped a data.frame pedigree providing family information for each individual in geno. The first
-#' column of the pedigree is for ID, second is for sire/father ID, and third is for dam/mother ID.
+#' column of the pedigree is for ID, second is for sire/father ID, and third is for dam/mother ID. If
+#' not all supplied IDs in geno can be found in the ID row of ped, they will be appended to the ped
+#' with missing parent information.
 #' @param path a character represting the path to the FImpute binary. If omitted, assumes FImpute binary
 #' resides along PATH.
 #' @param groups a list of character vectors with the names of IDs meant to be processed as groups. 
@@ -90,7 +92,32 @@ fimpute_run <- function(geno,
                 col.names = TRUE, 
                 row.names = FALSE)
     
-    # 2. Geno info and submission file
+    # 2. Pedigree file, if provided
+    if (!is.null(ped)) {
+      if (!is.data.frame(ped) | ncol(ped) != 3)
+        stop("ped argument supplied, but it does not appear to be a d.f. with 3 columns")
+      
+      # Append missing pedigree IDs. 
+      if (!any(rownames(geno) %in% ped[, 1])) {
+        extra_ids <- rownames(geno)[!(rownames(geno) %in% ped[, 1])]
+        ped <- rbind(ped,
+                     data.frame(extra_ids,
+                                rep(0, length(extra_ids)),
+                                rep(0, length(extra_ids))))
+      }
+      
+      # Sex assumed male for each.
+      ped <- cbind(ped, rep("M", nrow(ped)))
+      
+      # Write pedigree to disk for fimpute run
+      write.table(ped, file = "trio_ped_fimpute.txt", 
+                  quote = FALSE, 
+                  sep = '\t', 
+                  col.names = TRUE, 
+                  row.names = FALSE)
+    }
+    
+    # 3. Geno info and submission file for each element in groups
     if (!is.null(groups)) {
       for (i in 1:length(groups)) {
         
@@ -112,7 +139,7 @@ fimpute_run <- function(geno,
             paste0('genotype_file="', names(groups)[i], '_geno_fimpute.txt";'),
             'snp_info_file="snp_info_fimpute.txt";',
             if (!is.null(ped))
-                   paste0('ped_file="', ped, '";'),
+              paste0('ped_file=trio_ped_fimpute;'),
             paste0('output_folder="', output_folder, '/', names(groups)[i], '_fimpute_run";'),
             paste0('exclude_chr= ', exclude_chr, ';'),
             'save_hap_lib;',
