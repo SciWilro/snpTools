@@ -107,7 +107,7 @@ fimpute_run <- function(geno,
       }
       
       # Sex assumed male for each.
-      ped <- cbind(ped, rep("M", nrow(ped)))
+      ped <- cbind(ped, "sex" = rep("M", nrow(ped)))
       
       # Write pedigree to disk for fimpute run
       write.table(ped, file = "trio_ped_fimpute.txt", 
