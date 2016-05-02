@@ -8,7 +8,10 @@
 #' be coded as dosage of allele 'b' {0, 1, 2}.
 #' @param map a data.frame containing SNP map information for each SNP present in geno
 #' @param ped a data.frame pedigree providing family information for each individual in geno. The first
-#' column of the pedigree is for ID, second is for sire/father ID, third is for dam/mother ID.  If
+#' column of the pedigree is for ID, second is for sire/father ID, third is for dam/mother ID, fourth
+#' is sex of ID {"M" or "F"}. If ids in geno are not present in pedigree, they will be added to the
+#' end with missing parent information and a "M" sex. Correct sex information should only be required
+#' when imputing/phasing the sex chromosomes.
 #' not all supplied IDs in geno can be found in ped, they will be appended to the ped
 #' with missing parent information.
 #' @param path a character represting the path to the FImpute binary. If omitted, assumes FImpute binary
@@ -94,8 +97,8 @@ fimpute_run <- function(geno,
     
     # 2. Pedigree file, if provided
     if (!is.null(ped)) {
-      if (!is.data.frame(ped) | ncol(ped) != 3)
-        stop("ped argument supplied, but it does not appear to be a d.f. with 3 columns")
+      if (!is.data.frame(ped) | ncol(ped) != 4)
+        stop("ped argument supplied, but it does not appear to be a d.f. with 4 columns")
       
       # Ensure IDs in pedigree contain no spaces. Replace with "_".
       ped[, 1] <- gsub(" ", "_", ped[, 1])
@@ -107,13 +110,11 @@ fimpute_run <- function(geno,
         extra_ids <- rownames(geno)[!(rownames(geno) %in% unlist(ped))]
         extra_ped <- data.frame(extra_ids,
                                 rep(0, length(extra_ids)),
-                                rep(0, length(extra_ids)))
+                                rep(0, length(extra_ids)),
+                                rep("M", length(extra_ids)))
         colnames(extra_ped) <- colnames(ped)
         ped <- rbind(ped, extra_ped)
       }
-      
-      # Sex assumed male for each.
-      ped <- cbind(ped, "sex" = rep("M", nrow(ped)))
       
       # Write pedigree to disk for fimpute run
       write.table(ped, file = "trio_ped_fimpute.txt", 
