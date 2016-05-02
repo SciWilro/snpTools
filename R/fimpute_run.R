@@ -105,10 +105,11 @@ fimpute_run <- function(geno,
       # Append missing pedigree IDs. 
       if (any(!(rownames(geno) %in% unlist(ped)))) {
         extra_ids <- rownames(geno)[!(rownames(geno) %in% unlist(ped))]
-        ped <- rbind(ped,
-                     data.frame(extra_ids,
+        extra_ped <- data.frame(extra_ids,
                                 rep(0, length(extra_ids)),
-                                rep(0, length(extra_ids))))
+                                rep(0, length(extra_ids)))
+        colnames(extra_ped) <- colnames(ped)
+        ped <- rbind(ped, extra_ped)
       }
       
       # Sex assumed male for each.
