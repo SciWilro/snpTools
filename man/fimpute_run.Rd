@@ -14,8 +14,8 @@ be coded as dosage of allele 'b' {0, 1, 2}.}
 \item{map}{a data.frame containing SNP map information for each SNP present in geno}
 
 \item{ped}{a data.frame pedigree providing family information for each individual in geno. The first
-column of the pedigree is for ID, second is for sire/father ID, and third is for dam/mother ID. If
-not all supplied IDs in geno can be found in the ID row of ped, they will be appended to the ped
+column of the pedigree is for ID, second is for sire/father ID, third is for dam/mother ID.  If
+not all supplied IDs in geno can be found in ped, they will be appended to the ped
 with missing parent information.}
 
 \item{path}{a character represting the path to the FImpute binary. If omitted, assumes FImpute binary

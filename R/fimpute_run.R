@@ -8,8 +8,8 @@
 #' be coded as dosage of allele 'b' {0, 1, 2}.
 #' @param map a data.frame containing SNP map information for each SNP present in geno
 #' @param ped a data.frame pedigree providing family information for each individual in geno. The first
-#' column of the pedigree is for ID, second is for sire/father ID, and third is for dam/mother ID. If
-#' not all supplied IDs in geno can be found in the ID row of ped, they will be appended to the ped
+#' column of the pedigree is for ID, second is for sire/father ID, third is for dam/mother ID.  If
+#' not all supplied IDs in geno can be found in ped, they will be appended to the ped
 #' with missing parent information.
 #' @param path a character represting the path to the FImpute binary. If omitted, assumes FImpute binary
 #' resides along PATH.
@@ -97,9 +97,14 @@ fimpute_run <- function(geno,
       if (!is.data.frame(ped) | ncol(ped) != 3)
         stop("ped argument supplied, but it does not appear to be a d.f. with 3 columns")
       
+      # Ensure IDs in pedigree contain no spaces. Replace with "_".
+      ped[, 1] <- gsub(" ", "_", ped[, 1])
+      ped[, 2] <- gsub(" ", "_", ped[, 2])
+      ped[, 3] <- gsub(" ", "_", ped[, 3])
+      
       # Append missing pedigree IDs. 
-      if (!any(rownames(geno) %in% ped[, 1])) {
-        extra_ids <- rownames(geno)[!(rownames(geno) %in% ped[, 1])]
+      if (any(!(rownames(geno) %in% unlist(ped)))) {
+        extra_ids <- rownames(geno)[!(rownames(geno) %in% unlist(ped))]
         ped <- rbind(ped,
                      data.frame(extra_ids,
                                 rep(0, length(extra_ids)),
