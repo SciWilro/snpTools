@@ -12,8 +12,6 @@
 #' is sex of ID {"M" or "F"}. If ids in geno are not present in pedigree, they will be added to the
 #' end with missing parent information and a "M" sex. Correct sex information should only be required
 #' when imputing/phasing the sex chromosomes.
-#' not all supplied IDs in geno can be found in ped, they will be appended to the ped
-#' with missing parent information.
 #' @param path a character represting the path to the FImpute binary. If omitted, assumes FImpute binary
 #' resides along PATH.
 #' @param groups a list of character vectors with the names of IDs meant to be processed as groups. 
