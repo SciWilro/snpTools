@@ -18,6 +18,10 @@
 #' Names of list should be the names of the groups, with each element containing IDs.
 #' @param exclude_chr a character vector of chromosomes to exclude
 #' @param output_folder a character providing the location of desired FImpute output
+#' @param parent logical use TRUE if only parents identified from the pedigree are to be reference animals
+#' @param reference logical use TRUE if you want `groups` to be used to specify the reference animals
+#' used by FImpute. Not compatable with parent TRUE
+#' @param keep_fimpute logical use TRUE to remove associated files used to run FImpute.
 #' @export
 fimpute_run <- function(geno,
                         map,
@@ -25,10 +29,15 @@ fimpute_run <- function(geno,
                         path = NULL,
                         groups = NULL,
                         exclude_chr = 0,
-                        output_folder = getwd()) {
+                        output_folder = getwd(),
+                        parent = FALSE,
+                        reference = FALSE,
+                        keep_fimpute = FALSE) {
 
     message("Preparing input files for FImpute")
-  
+
+    fimpute_files <- c()
+    
     # Check if required objects meet criteria
     if(!any(colnames(map) == c("chr", "pos")))
       stop("Check map argument. It should have the columns 'chr' and 'map'")
@@ -122,6 +131,18 @@ fimpute_run <- function(geno,
                   row.names = FALSE)
     }
     
+    # 4. Write reference file (if reference is TRUE) for each group
+    if (reference) {
+      for (i in 1:length(groups)) {
+        write.table(as.data.frame(groups[[i]]),
+                    file = paste0(names(groups)[i],
+                                  "_reference.txt"),
+                    quote = FALSE,
+                    col.names = FALSE,
+                    row.names = FALSE)
+      }
+    }
+    
     # 3. Geno info and submission file for each element in groups
     if (!is.null(groups)) {
       for (i in 1:length(groups)) {
@@ -138,7 +159,8 @@ fimpute_run <- function(geno,
                     row.names = FALSE)
         
         # One submission file for each group
-        file_con <- file(paste0(names(groups)[i], "_fimpute_run.txt"))
+        file_name <- paste0(names(groups)[i], "_fimpute_run.txt")
+        file_con <- file(file_name)
         writeLines(
           c(paste0('title="', names(groups)[i], '";'), 
             paste0('genotype_file="', names(groups)[i], '_geno_fimpute.txt";'),
@@ -148,7 +170,10 @@ fimpute_run <- function(geno,
             paste0('output_folder="', output_folder, '/', names(groups)[i], '_fimpute_run";'),
             paste0('exclude_chr= ', exclude_chr, ';'),
             'save_hap_lib;',
-            # 'ref = 1000 /parent;',
+            if (parent)
+              paste0('ref = 1000 /parent;'),
+            if (reference)
+              paste0('ref ="', names(groups)[i], '_reference.txt";'),
             'njob=5;'),
           con = file_con
         )
@@ -159,6 +184,8 @@ fimpute_run <- function(geno,
           system(paste0(path, "/FImpute ", names(groups)[i], "_fimpute_run.txt"))
         else
           system(paste0("FImpute ", names(groups)[i], "_fimpute_run.txt"))
+        
+        # Add file
       }
     } else {
       write.table(genotypes,
@@ -179,7 +206,8 @@ fimpute_run <- function(geno,
           paste0('output_folder="', output_folder, '/fimpute_run";'),
           paste0('exclude_chr= ', exclude_chr, ';'),
           'save_hap_lib;',
-          # 'ref = 1000 /parent;',
+          if (parent)
+            paste0('ref = 1000 /parent;'),
           'njob=5;'),
         con = file_con
       )

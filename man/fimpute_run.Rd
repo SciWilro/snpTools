@@ -5,7 +5,8 @@
 \title{Run Fimpute}
 \usage{
 fimpute_run(geno, map, ped = NULL, path = NULL, groups = NULL,
-  exclude_chr = 0, output_folder = getwd())
+  exclude_chr = 0, output_folder = getwd(), parent = FALSE,
+  reference = FALSE, keep_fimpute = FALSE)
 }
 \arguments{
 \item{geno}{a matrix or data.frame with SNPs in columns and individuals in rows. Genotypes must
@@ -14,9 +15,10 @@ be coded as dosage of allele 'b' {0, 1, 2}.}
 \item{map}{a data.frame containing SNP map information for each SNP present in geno}
 
 \item{ped}{a data.frame pedigree providing family information for each individual in geno. The first
-column of the pedigree is for ID, second is for sire/father ID, third is for dam/mother ID.  If
-not all supplied IDs in geno can be found in ped, they will be appended to the ped
-with missing parent information.}
+column of the pedigree is for ID, second is for sire/father ID, third is for dam/mother ID, fourth
+is sex of ID {"M" or "F"}. If ids in geno are not present in pedigree, they will be added to the
+end with missing parent information and a "M" sex. Correct sex information should only be required
+when imputing/phasing the sex chromosomes.}
 
 \item{path}{a character represting the path to the FImpute binary. If omitted, assumes FImpute binary
 resides along PATH.}
@@ -27,6 +29,13 @@ Names of list should be the names of the groups, with each element containing ID
 \item{exclude_chr}{a character vector of chromosomes to exclude}
 
 \item{output_folder}{a character providing the location of desired FImpute output}
+
+\item{parent}{logical use TRUE if only parents identified from the pedigree are to be reference animals}
+
+\item{reference}{logical use TRUE if you want `groups` to be used to specify the reference animals
+used by FImpute. Not compatable with parent TRUE}
+
+\item{keep_fimpute}{logical use TRUE to remove associated files used to run FImpute.}
 }
 \description{
 Invoke Fimpute for imputation and genotype phasing from within R. Uses R objects for genotypes,
