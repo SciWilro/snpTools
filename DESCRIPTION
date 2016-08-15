@@ -9,4 +9,4 @@ Suggests:
     testthat
 Imports:
     magrittr (>= 1.5)
-RoxygenNote: 5.0.1
+RoxygenNote: 5.0.1.9000
