@@ -28,7 +28,7 @@ fimpute_run <- function(geno,
                         ped = NULL,
                         path = NULL,
                         groups = NULL,
-                        exclude_chr = 0,
+                        exclude_chr = NULL,
                         output_folder = getwd(),
                         parent = FALSE,
                         reference = FALSE,
@@ -168,7 +168,8 @@ fimpute_run <- function(geno,
             if (!is.null(ped))
               paste0('ped_file="trio_ped_fimpute.txt";'),
             paste0('output_folder="', output_folder, '/', names(groups)[i], '_fimpute_run";'),
-            paste0('exclude_chr= ', exclude_chr, ';'),
+            if (!is.null(exclude_chr))
+              paste0('exclude_chr= ', exclude_chr, ';'),
             'save_hap_lib;',
             if (parent)
               paste0('ref = 1000 /parent;'),
@@ -204,7 +205,8 @@ fimpute_run <- function(geno,
           if (!is.null(ped))
             paste0('ped_file="trio_ped_fimpute.txt";'),
           paste0('output_folder="', output_folder, '/fimpute_run";'),
-          paste0('exclude_chr= ', exclude_chr, ';'),
+          if (!is.null(exclude_chr))
+            paste0('exclude_chr= ', exclude_chr, ';'),
           'save_hap_lib;',
           if (parent)
             paste0('ref = 1000 /parent;'),

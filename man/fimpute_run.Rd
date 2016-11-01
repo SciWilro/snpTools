@@ -5,7 +5,7 @@
 \title{Run Fimpute}
 \usage{
 fimpute_run(geno, map, ped = NULL, path = NULL, groups = NULL,
-  exclude_chr = 0, output_folder = getwd(), parent = FALSE,
+  exclude_chr = NULL, output_folder = getwd(), parent = FALSE,
   reference = FALSE, keep_fimpute = FALSE)
 }
 \arguments{
