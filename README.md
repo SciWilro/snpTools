@@ -42,12 +42,12 @@ For more information on any particular function, use:
 
 ```r
 fimpute_run(geno = <geno>, 
-			map = <map>, 
-			path = "/path/to/FImpute",
-			exclude_chr = "1 2 3 4 5 6 7 9 10 11 12 13 14 15 16 17 18 19 20 21")
+			      map = <map>, 
+			      path = "/path/to/FImpute",
+			      exclude_chr = "1 2 3 4 5 6 7 9 10 11 12 13 14 15 16 17 18 19 20 21")
 ```	
 
-- `<geno>` may be a data.frame or matrix containing SNPs in columns and individuals in rows. SNPs must be represented as dosages.
+- `<geno>` may be a data.frame or matrix containing SNPs in columns and individuals in rows. SNPs must be represented as dosages {0, 1, 2}. Rownames must contain the name of each individual.
 - `<map>` must be a data.frame containing SNP information, with columns labeled as "chr" and "pos", and rownames containing the name of each SNP.
 - Use the `path` argument to specify the location of the FImpute binary.
 - Use the `exclude_chr` to specify a character string containing the chromosomes you want to exclude in the genotype phasing. In the example we are only phasing SNPs present on chromosome 8.
