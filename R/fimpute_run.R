@@ -40,7 +40,7 @@ fimpute_run <- function(geno,
     
     # Check if required objects meet criteria
     if(!any(colnames(map) == c("chr", "pos")))
-      stop("Check map argument. It should have the columns 'chr' and 'map'")
+      stop("Check map argument. It should only have two columns: 'chr' and 'pos'")
   
     # Ensure chromosomes are numeric character values (change sex chromosomes if necessary) and replace
     # 0 positions with NA
