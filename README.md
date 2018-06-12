@@ -41,10 +41,10 @@ For more information on any particular function, use:
 `fimpute_run()` can be used to phase genotypes, given a genotyping dataset and SNP map with:
 
 ```r
-fimpute_run(geno = <geno>, 
-			      map = <map>, 
-			      path = "/path/to/FImpute",
-			      exclude_chr = "1 2 3 4 5 6 7 9 10 11 12 13 14 15 16 17 18 19 20 21")
+fimpute_run(geno = <geno>,
+            map = <map>,
+            path = "/path/to/FImpute",
+            exclude_chr = "1 2 3 4 5 6 7 9 10 11 12 13 14 15 16 17 18 19 20 21")
 ```	
 
 - `<geno>` may be a data.frame or matrix containing SNPs in columns and individuals in rows. SNPs must be represented as dosages {0, 1, 2}. Rownames must contain the name of each individual.
